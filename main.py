@@ -4,8 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret" 
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:justblogit@localhost:8889/build-a-blog'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://armenblog:blog@localhost:8889/armenblog'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:justblogit@localhost:8889/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 
