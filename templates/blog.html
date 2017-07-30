@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    {% if entry|length == 0 %}
+    {% if body|length == 0 %}
     <p>No entries yet</p>
     {% else %}
     pass
@@ -10,8 +10,8 @@
 
     <ul>
         {% for posts in submitted_blogs %}
-       <p><u>Blog Title: {{posts.title}}</u>
-        <p>{{posts.body}}</p>
+       <p><u>Blog Title: {{blog.title}}</u>
+        <p>{{blog.body}}</p>
        
         {% endfor %}
     </ul>

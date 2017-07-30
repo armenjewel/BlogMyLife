@@ -16,17 +16,17 @@ class Blog(db.Model):
     title = db.Column(db.String(120))
     body = db.Column(db.String(120))
     submitted = db.Column(db.Boolean)
-    owner_id = db.Column(db.Integer, unique=True)
+    owner_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
     def __init__(self, title, body, submitted=True):
         self.title = title
         self.body = body
         self.submitted = submitted
-        self.owner = owner_id
+        self.owner_id = owner_id
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20))
+    id = db.Column(db.Integer, unique=True, primary_key=True)
+    username = db.Column(db.String(20), unique=True)
     password = db.Column(db.String(20))
     blogs = db.Column(db.String(2000))
 
@@ -69,6 +69,17 @@ def show_posts():
         return render_template('blog.html', submitted_blogs=submitted_blogs, title=title, body=body)
 
 
+
+# @app.route('/newpost', methods=['POST', 'GET'])
+# def test():
+#     user_id = '' 
+#     if request.method == 'POST':
+#         user_id = db.session.query(User.id).filter_by(username=request.form['username'] )  
+#         flash(user_id)
+#         return render_template('test.html', user_id=user_id)
+#     else:
+#          return render_template('newpost.html', title='title', body='body')
+
 @app.route('/newpost', methods=['POST', 'GET'])
 def new_post():
     title = ''
@@ -76,16 +87,22 @@ def new_post():
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
-        submitted = True
-        owner_id = user.id
-        newpost = Blog(title=title, body=body, submitted=True, owner_id=owner_id)
+        submitted = True        
+        print("username:" + username)
+        user_id = User.query.filter_by(username=username).first().id
+        print("user:", user)
+        #user_id = db.session.query(User.id).filter_by(username=request.form['username']).get()
+        #flash(user_id)
+        newpost = Blog(title=title, body=body, submitted=True, owner_id=user_id)
         db.session.add(newpost)
         db.session.commit()
         blog=newpost.id
         blogs=Blogs(title=title, body=body)
         return redirect('/blog?id={0}'.format(blog))
     else:
+
         return render_template('newpost.html', title='title', body='body')
+
 
 """
 New Routes Below
@@ -99,12 +116,13 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and user.password == password:
             session['username'] = username
-            flash("Logged in")
-            return redirect('/newpost')
+            flash("Logged in")        
+            return redirect('/newpost')    
         else:
             flash('Error: User password incorrect, or user does not exist')
             return redirect('/login')    
     return render_template('login.html')
+
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
@@ -121,7 +139,7 @@ def signup():
             db.session.commit()
             user=new_user.id
             session['username'] = username
-            return redirect('/user?id={0}'.format(user))
+            #return redirect('/user?id={0}'.format(user))
             return redirect('/newpost')
         else:
             # TODO - user better response messaging
