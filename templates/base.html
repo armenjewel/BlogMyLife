@@ -2,13 +2,27 @@
 <html>
     <head>
         <title>Build A Blog</title>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+{% block body %}{% endblock %}        
     </head>
 <body>
-    <h1>Build a Blog</h1>
 <nav>
-  <a href="/blog">Main Blog Page</a> |
-  <a href="/newpost">Add a Blog Entry</a> |
+  <a href="/index">Home</a> |
+  <a href="/blog">All Posts</a> |
+  <a href="/newpost">New Post</a> |
+  <a href="/login">login</a> |
+  <a href="/logout">logout</a> |
 </nav>
+
+    <h1>Blog Users</h1>
 
     {% block content %}
     {% endblock %}
