@@ -1,5 +1,7 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import relationship
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret" 
@@ -28,7 +30,8 @@ class User(db.Model):
     id = db.Column(db.Integer, unique=True, primary_key=True)
     username = db.Column(db.String(20), unique=True)
     password = db.Column(db.String(20))
-    blogs = db.Column(db.String(2000))
+    blogs = relationship("Blog", backref="user")
+
 
     def __init__(self, username, password, blogs):
         self.username = username
@@ -50,9 +53,9 @@ def home():
 
 @app.route('/index', methods=['POST', 'GET'])
 def index():
-    #blog_id = request.args.get('id')
     all_users = User.query.all()
-    return render_template('index.html', all_users=all_users)
+    blog_id = request.args.get('id')
+    return render_template('index.html', all_users=all_users, blog_id=blog_id)
 
 
     """blog_id = request.args.get('id')
@@ -105,8 +108,8 @@ def new_post():
         newpost = Blog(title=title, body=body, submitted=True, owner_id=owner_id)
         db.session.add(newpost)
         db.session.commit()
-        blog=newpost.id
-        blogs=Blogs(title=title, body=body)
+        # blog=newpost.id
+        # blogs=Blogs(title=title, body=body)
         return redirect('/blog?id={0}'.format(blog))
     else:
         return render_template('newpost.html', title='title', body='body', username=username)
