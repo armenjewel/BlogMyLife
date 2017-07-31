@@ -3,9 +3,12 @@
 
     <ul>
         {% for user in all_users %}
-       <p><u>User: {{user.username}}</u>
+       <p><u> <a href="/landing?id={{blog.id}}">Blog Title: {{blog.title}}</a></u>
+        User: {{user.username}}</u>
         <p>{{user.blogs}}</p>
        
         {% endfor %}
     </ul>
 {% endblock %}
+
+       

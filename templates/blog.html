@@ -10,7 +10,7 @@
 
     <ul>
         {% for posts in submitted_blogs %}
-       <p><u>Blog Title: {{blog.title}}</u>
+       <p><u> <a href="/landing?id={{blog.id}}"> Blog Title: {{blog.title}}</a></u> 
         <p>{{blog.body}}</p>
        
         {% endfor %}

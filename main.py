@@ -22,7 +22,7 @@ class Blog(db.Model):
         self.title = title
         self.body = body
         self.submitted = submitted
-        self.owner_id = owner_id
+        self.owner = owner
 
 class User(db.Model):
     id = db.Column(db.Integer, unique=True, primary_key=True)
@@ -64,11 +64,16 @@ def show_posts():
     title = ''
     body = ''
     if request.method == 'GET':
-   
         submitted_blogs = Blog.query.all()
         return render_template('blog.html', submitted_blogs=submitted_blogs, title=title, body=body)
 
 
+@app.route('/landing', methods =['GET'])
+def show_blog():
+    blog_id = request.args.get('id')
+    blog = Blog.query.get(blog_id)
+    return render_template('landing.html', blog=blog)
+    
 
 # @app.route('/newpost', methods=['POST', 'GET'])
 # def test():
@@ -84,24 +89,27 @@ def show_posts():
 def new_post():
     title = ''
     body = ''
+    username = session['username']    
     if request.method == 'POST':
         title = request.form['title']
-        body = request.form['body']
+        body = request.form['body']    
         submitted = True        
-        print("username:" + username)
-        user_id = User.query.filter_by(username=username).first().id
-        print("user:", user)
+        owner_id = request.args.get(username)
+        #print("username:" + username)
+        user_id = User.query.filter_by(id=id).first()
+        #flash("user:", user)
         #user_id = db.session.query(User.id).filter_by(username=request.form['username']).get()
         #flash(user_id)
-        newpost = Blog(title=title, body=body, submitted=True, owner_id=user_id)
+        owner_id = User.query.filter_by(username=username).first()
+        #owner_id = user_id
+        newpost = Blog(title=title, body=body, submitted=True, owner_id=owner_id)
         db.session.add(newpost)
         db.session.commit()
         blog=newpost.id
         blogs=Blogs(title=title, body=body)
         return redirect('/blog?id={0}'.format(blog))
     else:
-
-        return render_template('newpost.html', title='title', body='body')
+        return render_template('newpost.html', title='title', body='body', username=username)
 
 
 """
