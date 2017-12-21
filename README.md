@@ -13,4 +13,4 @@ This project is built using a mysql database. The following dependencies are nee
     <li>Create a username and password for access to the site</li>
     <li>You now have access to a template blog site where users can create blogs. Input validation handles incorrect entries for username and password. Enjoy!</li>
     </ol>
-    <</p>
+    </p>
